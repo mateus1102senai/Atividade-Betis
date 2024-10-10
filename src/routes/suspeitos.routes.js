@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-const candidatosRoutes = Router();
+const suspeitosRoutes = Router();
 
 // Array com candidatos pré-cadastrados
 let suspeitos = [
@@ -59,7 +59,7 @@ suspeitosRoutes.post("/", (req, res) => {
   }
 
   // Criação de um novo candidato
-  const novoCandidato = {
+  const novoSuspeito = {
     id: Math.floor(Math.random() * 1000000),
     nome,
     partido,
@@ -69,7 +69,7 @@ suspeitosRoutes.post("/", (req, res) => {
   };
 
   // Adiciona o novo candidato ao array de candidatos
-  candidatos.push(novoSuspeito);
+  suspeito.push(novoSuspeito);
 
   return res.status(201).json({
     message: "Candidato cadastrado com sucesso!",
@@ -78,32 +78,32 @@ suspeitosRoutes.post("/", (req, res) => {
 });
 
 // Rota para buscar um candidato pelo id
-candidatosRoutes.get("/:id", (req, res) => {
+suspeitosRoutes.get("/:id", (req, res) => {
   const { id } = req.params;
 
   // Busca um candidato pelo id no array de candidatos
-  const candidato = candidatos.find((politico) => politico.id == id);
+  const suspeitos = suspeitos.find((politico) => politico.id == id);
 
   // Verifica se o candidato foi encontrado
-  if (!candidato) {
+  if (!suspeitos) {
     return res
       .status(404)
       .json({ message: `Candidato com id ${id} não encontrado!` });
   }
 
-  return res.status(200).json(candidato);
+  return res.status(200).json(suspeitos);
 });
 
 // Rota para atualizar um candidato pelo id
-candidatosRoutes.put("/:id", (req, res) => {
+suspeitosRoutes.put("/:id", (req, res) => {
   const { id } = req.params;
   const { nome, partido, idade, segundo, propostas } = req.body;
 
   // Busca um candidato pelo id no array de candidatos
-  const candidato = candidatos.find((politico) => politico.id == id);
+  const suspeitos = suspeitos.find((politico) => politico.id == id);
 
   // Verifica se o candidato foi encontrado
-  if (!candidato) {
+  if (!suspeitos) {
     return res
       .status(404)
       .json({ message: `Candidato com id ${id} não encontrado!` });
@@ -128,7 +128,7 @@ candidatosRoutes.put("/:id", (req, res) => {
   });
 });
 
-candidatosRoutes.delete("/:id", (req, res) => {
+suspeitosRoutes.delete("/:id", (req, res) => {
   const { id } = req.params;
 
   // Busca um candidato pelo id no array de candidatos
@@ -142,7 +142,7 @@ candidatosRoutes.delete("/:id", (req, res) => {
   }
 
   // Remove o candidato do array de candidatos
-  candidatos = candidatos.filter((candidato) => candidato.id != id);
+  suspeitos = suspeitos.filter((suspeitos) => suspeitos.id != id);
 
   return res.status(200).json({
     message: "Candidato removido com sucesso!",
@@ -150,4 +150,4 @@ candidatosRoutes.delete("/:id", (req, res) => {
   });
 });
 
-export default candidatosRoutes;
+export default suspeitosRoutes;
