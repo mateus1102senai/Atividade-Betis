@@ -8,146 +8,132 @@ let suspeitos = [
     id: Math.floor(Math.random() * 1000000),
     nome: "Matheus Couto",
     profissão: "Professor",
-    apostas: false, // Concorrente ao segundo mandato
+    apostas: "não", // Concorrente ao segundo mandato
     suspeita: "Baixa"
   },
   {
     id: Math.floor(Math.random() * 1000000),
     nome: "Mateus Marcelino",
     profissão: "Jogador",
-    apostas: true,
+    apostas: "sim",
     suspeita: "Alta"
   },
   {
     id: Math.floor(Math.random() * 1000000),
     nome: "João Gianoni",
     profissão: "Dentista",  
-    apostas: false,
+    apostas: "não",
     suspeita: "Baixa"
   },
   {
     id: Math.floor(Math.random() * 1000000),
     nome: "Vitor Sampaio",
     profissão: "açougueiro",
-    aposta: false,
+    aposta: "não",
     suspeita: "Medio"
   },
 ];
 
-// Rota para listar todos os candidatos
 suspeitosRoutes.get("/", (req, res) => {
   return res.status(200).json(suspeitos);
-});
-
-// Rota para cadastrar um novo candidato
-suspeitosRoutes.post("/", (req, res) => {
-  const { nome, profissão, aposta, suspeita } = req.body;
-
-  // Validação dos campos nome e partido
-  if (!nome || !profissão) {
-    return res.status(400).send({
-      message: "O nome ou a profissão foi preenchido!",
-    });
+  });
+  
+  suspeitosRoutes.post("/", (req, res) => {
+  const { nome, profissao, aposta, suspeita } = req.body;
+  
+    // Validação dos campos nome e profissão
+  
+  if (!nome || !profissao) {
+      return res.status(400).send({
+      message: "O nome ou a profissão não foi preenchido!",
+      });
   }
-
-  // Validação de idade
-  if (suspeita != "Baixo" && suspeita != "Medio" && suspeita != "Alto") {
+  
+  if (aposta != "sim" && aposta != "não") {
     return res.status(400).send({
+    message: "Campo de aposta não preenchido corretamente!",
+    });
+}
+  // Validação do suspeito de suspeita
+  
+  if (!["Baixo", "Médio", "Alto"].includes(suspeita)) {
+      return res.status(400).send({
       message:
-        "O suspeito não tem nenhum nível de suspeito!",
-    });
+          "o suspeito não tem nível!",
+      });
   }
-
-  // Criação de um novo candidato
-  const novoSuspeito = {
-    id: Math.floor(Math.random() * 1000000),
-    nome,
-    partido,
-    idade,
-    segundo,
-    propostas,
+  
+  // Criar um novo suspeito
+  const novosuspeito = {
+      id: Math.floor(Math.random() * 1000000),
+      nome,
+      profissao,
+      aposta: aposta || false,
+      suspeita
   };
-
-  // Adiciona o novo candidato ao array de candidatos
-  suspeito.push(novoSuspeito);
-
+  
+  suspeitos.push(novosuspeito);
   return res.status(201).json({
-    message: "Candidato cadastrado com sucesso!",
-    novoCandidato,
+      message: "suspeito criado com sucesso!",
+      novosuspeito,
   });
-});
-
-// Rota para buscar um candidato pelo id
-suspeitosRoutes.get("/:id", (req, res) => {
-  const { id } = req.params;
-
-  // Busca um candidato pelo id no array de candidatos
-  const suspeitos = suspeitos.find((politico) => politico.id == id);
-
-  // Verifica se o candidato foi encontrado
-  if (!suspeitos) {
-    return res
-      .status(404)
-      .json({ message: `Candidato com id ${id} não encontrado!` });
-  }
-
-  return res.status(200).json(suspeitos);
-});
-
-// Rota para atualizar um candidato pelo id
-suspeitosRoutes.put("/:id", (req, res) => {
-  const { id } = req.params;
-  const { nome, partido, idade, segundo, propostas } = req.body;
-
-  // Busca um candidato pelo id no array de candidatos
-  const suspeitos = suspeitos.find((politico) => politico.id == id);
-
-  // Verifica se o candidato foi encontrado
-  if (!suspeitos) {
-    return res
-      .status(404)
-      .json({ message: `Candidato com id ${id} não encontrado!` });
-  }
-
-  // Validação dos campos nome e partido
-  if (!nome || !partido) {
-    return res.status(400).send({
-      message: "O nome ou o partido não foi preenchido, criança aleatória!",
-    });
-  }
-
-  candidato.nome = nome;
-  candidato.partido = partido;
-  candidato.idade = idade;
-  candidato.segundo = segundo;
-  candidato.propostas = propostas;
-
-  return res.status(200).json({
-    message: "Candidato atualizado com sucesso!",
-    candidato,
   });
-});
-
-suspeitosRoutes.delete("/:id", (req, res) => {
-  const { id } = req.params;
-
-  // Busca um candidato pelo id no array de candidatos
-  const candidato = candidatos.find((politico) => politico.id == id);
-
-  // Verifica se o candidato foi encontrado
-  if (!candidato) {
-    return res
-      .status(404)
-      .json({ message: `Candidato com id ${id} não encontrado!` });
-  }
-
-  // Remove o candidato do array de candidatos
-  suspeitos = suspeitos.filter((suspeitos) => suspeitos.id != id);
-
-  return res.status(200).json({
-    message: "Candidato removido com sucesso!",
-    candidato,
+  
+  // Rota GET: Buscar suspeito pelo ID
+  
+  suspeitosRoutes.get("/:id", (req, res) => {
+      const { id } = req.params;
+      const suspeito = suspeitos.find((suspeito) => suspeito.id == id);
+  
+      if (!suspeito) {
+          return res.status(404).json({ message: "Suspeito não encontrado!" });
+      }
+          return res.status(200).json(suspeito);
   });
-});
-
-export default suspeitosRoutes;
+  
+  
+  // Rota para atualizar um suspeito pelo id
+  suspeitosRoutes.put("/:id", (req, res) => {
+      const { id } = req.params; 
+      const { nome, profissao, aposta, suspeita} = req.body;
+  
+      const suspeito = suspeitos.find((suspeito) => suspeito.id === Number(id));
+  
+      if (!suspeito) {
+          return res.status(404).json({ message: `Suspeito não encontrado!` });
+      }
+  
+      if (!nome || !profissao) {
+          return res.status(400).json({ message: "Nome e profissão são obrigatórios!" });
+      }
+  
+      if (suspeita && !["Baixo", "Médio", "Alto"].includes(suspeita)) {
+          return res.status(400).json({ message: "o suspeito não tem nível!" });
+      }
+  
+     // Atualizar os campos do suspeito 
+  
+      suspeito.nome = nome || suspeito.nome;
+      suspeito.profissao = profissao || suspeito.profissao;
+      suspeito.aposta = aposta !== undefined ? aposta : suspeito.aposta; // Mantém o valor se não for passado
+      suspeito.suspeita = suspeita || suspeito.suspeito;
+  
+      return res.status(200).json({
+          message: "Suspeita atualizado com sucesso!",
+          suspeito,
+      });
+  });
+  
+  // Deletar o sujeito pelo id
+  suspeitosRoutes.delete("/:id", (req, res) => {
+  const { id } = req.params;
+  
+  const suspeito = suspeitos.find((suspeito) => suspeito.id === Number(id));
+  if (!suspeito) {
+      return res.status(404).json({ message: "suspeito não encontrado" });
+  }
+  suspeitos = suspeitos.filter((suspeito) => suspeito.id !== Number(id));
+  return res.status(200).json({ message: "suspeito deletado com sucesso!" });
+  });
+  
+  export default suspeitosRoutes;
